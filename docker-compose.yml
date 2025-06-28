@@ -20,10 +20,10 @@ services:
       KAFKA_LISTENERS: PLAINTEXT://127.0.0.1:29092,CONTROLLER://127.0.0.1:29093,PLAINTEXT_HOST://127.0.0.1:9092
       KAFKA_INTER_BROKER_LISTENER_NAME: PLAINTEXT
       KAFKA_CONTROLLER_LISTENER_NAMES: CONTROLLER
-      KAFKA_LOG_DIRS: /kraft-combined-logs
+      KAFKA_LOG_DIRS: /tmp/kraft-combined-logs
       CLUSTER_ID: licenta-gp
-    volumes:
-      - /home/preda/FMI/lucrare-de-licenta-cod/lucrare-de-licenta-mountpoints/kafka-broker:/kraft-combined-logs
+#    volumes:
+#      - kafka_logs:/tmp/kraft-combined-logs
   kafka-ui:
     image: provectuslabs/kafka-ui
     container_name: kafka-ui
@@ -57,3 +57,6 @@ services:
       LOG_LEVEL: ERROR
       CONNECT_VALUE_CONVERTER_SCHEMAS_ENABLE: false
       CONNECT_KEY_CONVERTER_SCHEMAS_ENABLE: false
+#
+#volumes:
+#  kafka_logs:

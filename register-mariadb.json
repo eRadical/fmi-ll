@@ -12,6 +12,8 @@
     "database.include.list": "sakila",
     "schema.history.internal.kafka.bootstrap.servers": "127.0.0.1:9092",
     "schema.history.internal.kafka.topic": "sakila-schema-changes",
+    "topic.creation.default.replication.factor": 1,
+    "topic.creation.default.partitions": 10,
     "topic.creation.default.cleanup.policy": "compact",
     "topic.creation.default.compression.type": "lz4",
     "topic.creation.default.delete.retention.ms": "604800000"
