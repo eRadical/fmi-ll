@@ -1,1 +1,3 @@
 .idea/
+mariadb-binlog-capture-w-nodejs/node_modules/
+mariadb-binlog-capture-w-nodejs/.idea/
