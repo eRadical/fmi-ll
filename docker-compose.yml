@@ -1,0 +1,59 @@
+---
+services:
+  broker:
+    image: apache/kafka:latest
+    hostname: broker
+    container_name: broker
+    network_mode: "host"
+    environment:
+      KAFKA_BROKER_ID: 1
+      KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: PLAINTEXT:PLAINTEXT,PLAINTEXT_HOST:PLAINTEXT,CONTROLLER:PLAINTEXT
+      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://127.0.0.1:29092,PLAINTEXT_HOST://127.0.0.1:9092
+      KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
+      KAFKA_GROUP_INITIAL_REBALANCE_DELAY_MS: 0
+      KAFKA_TRANSACTION_STATE_LOG_MIN_ISR: 1
+      KAFKA_TRANSACTION_STATE_LOG_REPLICATION_FACTOR: 1
+      KAFKA_PROCESS_ROLES: broker,controller
+      AUTO_CREATE_TOPICS: true
+      KAFKA_NODE_ID: 1
+      KAFKA_CONTROLLER_QUORUM_VOTERS: 1@127.0.0.1:29093
+      KAFKA_LISTENERS: PLAINTEXT://127.0.0.1:29092,CONTROLLER://127.0.0.1:29093,PLAINTEXT_HOST://127.0.0.1:9092
+      KAFKA_INTER_BROKER_LISTENER_NAME: PLAINTEXT
+      KAFKA_CONTROLLER_LISTENER_NAMES: CONTROLLER
+      KAFKA_LOG_DIRS: /kraft-combined-logs
+      CLUSTER_ID: licenta-gp
+    volumes:
+      - /home/preda/FMI/lucrare-de-licenta-cod/lucrare-de-licenta-mountpoints/kafka-broker:/kraft-combined-logs
+  kafka-ui:
+    image: provectuslabs/kafka-ui
+    container_name: kafka-ui
+    depends_on:
+      - broker
+    healthcheck:
+      start_period: 10s
+      test: ["CMD", "telnet", "127.0.0.1", "9092"]
+    network_mode: "host"
+    restart: always
+    environment:
+      - KAFKA_CLUSTERS_0_NAME=licenta-gp
+      - KAFKA_CLUSTERS_0_BOOTSTRAPSERVERS=127.0.0.1:9092
+  debezium_connect:
+    image: "quay.io/debezium/connect"
+    container_name: debezium_connect
+    depends_on:
+      - broker
+      - kafka-ui
+    network_mode: "host"
+    restart: on-failure
+    environment:
+      GROUP_ID: 1
+      CONFIG_STORAGE_TOPIC: connector-configs
+      OFFSET_STORAGE_TOPIC: connector-offsets
+      STATUS_STORAGE_TOPIC: connector-status
+      BOOTSTRAP_SERVERS: 127.0.0.1:9092
+      ADVERTISED_HOST_NAME: 127.0.0.1
+      HOST_NAME: 127.0.0.1
+      ENABLE_DEBEZIUM_SCRIPTING: false
+      LOG_LEVEL: ERROR
+      CONNECT_VALUE_CONVERTER_SCHEMAS_ENABLE: false
+      CONNECT_KEY_CONVERTER_SCHEMAS_ENABLE: false
