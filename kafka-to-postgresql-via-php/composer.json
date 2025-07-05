@@ -1,0 +1,21 @@
+{
+    "name": "eradical/kafka_to_pgsql",
+    "description": "Simple implementation of a Kafka consumer that writes updates to PgSQL",
+    "type": "project",
+    "license": "proprietary",
+    "authors": [
+        {
+            "name": "Gabriel PREDA",
+            "email": "gabriel@e-radical.ro"
+        }
+    ],
+    "require": {
+      "ext-rdkafka": ">=6.0.5",
+      "ext-pdo": ">=8.4.8",
+      "ext-pdo_pgsql": ">=8.4.8",
+      "ext-json": "*"
+    },
+    "autoload": {
+      "psr-4": {"DoKafkaMessage\\": "src/"}
+    }
+}

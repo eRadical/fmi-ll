@@ -8,7 +8,7 @@
     "database.user": "sakila",
     "database.password": "sakila",
     "database.server.id": "6546416",
-    "topic.prefix": "sakila",
+    "topic.prefix": "127_0_0_1",
     "database.include.list": "sakila",
     "schema.history.internal.kafka.bootstrap.servers": "127.0.0.1:9092",
     "schema.history.internal.kafka.topic": "sakila-schema-changes",
