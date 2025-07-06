@@ -9,12 +9,17 @@ $conf->set('auto.offset.reset', 'earliest');
 $conf->set('enable.partition.eof', 'true');
 
 $consumer = new RdKafka\KafkaConsumer($conf);
+//$consumer->subscribe(['127_0_0_1.sakila.country']);
 $consumer->subscribe([
-    '127_0_0_1.sakila.country',
-    '127_0_0_1.sakila.film_actor'
+    '^127_0_0_1.sakila..*'
     ]);
 
 $db = \DoKafkaMessage\DataAccess::getInstance();
+
+/**
+ * Keep track of deletes to treat tombstones
+ */
+$possibleTombStones = [];
 
 while (true) {
     $message = $consumer->consume(120 * 1000);
@@ -32,12 +37,30 @@ while (true) {
             $jsonKey = json_decode($message->key, true);
             $jsonPayload = json_decode($message->payload, true);
 
-            var_dump($jsonKey, $jsonPayload);
+            if ((strlen($message->payload) == 0) && (count($possibleTombStones) > 0)) {   // possible tombstone
+                if (in_array($message->key, $possibleTombStones)) {
+                    $k = array_search($message->key, $possibleTombStones);
+                    if ($k !== false) {
+                        unset($possibleTombStones[$k]);
+                    }
+                    error_log(sprintf('This %s is a tombstone. Ignoring.', $message->key));
+                    break;
+                }
+                else {
+                    error_log('Message payload is empty - and it is not a tombstone?');
+                }
+            }
+            else {
+                if ($jsonPayload['op'] === 'd') {
+                    $possibleTombStones[] = $message->key;
+                }
+            }
+
             $action = new DoKafkaMessage\ActOnKafkaMessage($jsonKey, $jsonPayload);
 
             break;
         case RD_KAFKA_RESP_ERR__PARTITION_EOF:
-            echo "No more messages; will wait for more\n";
+            echo "No more messages; waiting for more...\n";
             sleep(1);
             break;
         case RD_KAFKA_RESP_ERR__TIMED_OUT:

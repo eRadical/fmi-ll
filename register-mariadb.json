@@ -14,8 +14,10 @@
     "schema.history.internal.kafka.topic": "sakila-schema-changes",
     "topic.creation.default.replication.factor": 1,
     "topic.creation.default.partitions": 10,
-    "topic.creation.default.cleanup.policy": "compact",
+    "topic.creation.default.cleanup.policy": "delete",
     "topic.creation.default.compression.type": "lz4",
-    "topic.creation.default.delete.retention.ms": "604800000"
+    "topic.creation.default.delete.retention.ms": "604800000",
+    "decimal.handling.mode": "string",
+    "skipped.operations": "none"
   }
 }

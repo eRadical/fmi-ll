@@ -6,7 +6,7 @@ use PDO;
 
 class ActOnKafkaMessage
 {
-    private array $tablePk;
+    private ?array $tablePk;
     private ?array $beforeRow;
     private ?array $afterRow;
 
@@ -162,10 +162,18 @@ class ActOnKafkaMessage
         $preparedDelete->execute();
     }
 
-    private function operationTruncate() {
+    private function operationTruncate(): void
+    {
+        error_log('Table ' . $this->tableName . ' truncated. Doing the same in PgSQL.');
+
+        $db = \DoKafkaMessage\DataAccess::getInstance();
+        $preparedTruncate = $db->PDO->prepare('TRUNCATE TABLE ' . $this->tableName);
+
+        $preparedTruncate->execute();
     }
 
-    private function prepareWhereClause() {
+    private function prepareWhereClause(): array
+    {
         $whereClause = [
             'columns'               => [],
             'columnsWithBinders'    => [],

@@ -19,7 +19,14 @@ Content-Length: 510
 
 
 
+
+
+
+
 "topic.creation.default.delete.retention.ms": "604800000" /* 7 × 24 × 3600 × 1000 */
+"topic.creation.default.cleanup.policy": "compact" » incompatible w/ truncate events, that's why they are by default in `skipped.operations`
+
+
 
 https://debezium.io/documentation/reference/3.1/configuration/topic-auto-create-config.html
 
