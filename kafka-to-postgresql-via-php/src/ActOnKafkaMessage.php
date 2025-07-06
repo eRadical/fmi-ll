@@ -2,6 +2,8 @@
 
 namespace DoKafkaMessage;
 
+use PDO;
+
 class ActOnKafkaMessage
 {
     private array $tablePk;
@@ -46,7 +48,41 @@ class ActOnKafkaMessage
         }
     }
 
-    private function operationSnaphot() {
+    private function operationSnaphot(): void
+    {
+
+        $whereClause = $this->prepareWhereClause();
+
+        $sqlRead = 'SELECT ' . implode(', ', array_keys($this->afterRow)) . ' FROM ' . $this->tableName . ' WHERE ' . implode(' AND ', $whereClause['columns']);
+
+        $db = \DoKafkaMessage\DataAccess::getInstance();
+        $preparedRead = $db->PDO->prepare($sqlRead);
+
+        foreach ($whereClause['columnsWithBinders'] as $wci => $wcv) {
+            $preparedRead->bindValue(':col_' . $wcv, $whereClause['values'][$wci]);
+        }
+        $preparedRead->execute();
+        $existentRows = $preparedRead->fetchAll(PDO::FETCH_ASSOC);
+        if (count($existentRows) > 1) {
+            error_log('More than one row was found for table ' . $this->tableName . ', PK ' . json_encode($this->tablePk));
+            return;
+        }
+        elseif (count($existentRows) == 1) {
+            $row = $existentRows[0];
+            foreach ($this->afterRow as $ai => $av) {
+                if ($av == $row[$ai]) {
+                    unset($this->afterRow[$ai]);
+                }
+            }
+
+            if (count($this->afterRow) >= 1) {
+                $this->operationUpdate();
+            }
+        }
+        else {
+            error_log('Row not found for ' . $this->tableName . ', PK ' . json_encode($this->tablePk));
+            $this->operationCreate();
+        }
     }
 
     private function operationCreate(): void
@@ -109,7 +145,8 @@ class ActOnKafkaMessage
         $preparedUpdate->execute();
     }
 
-    private function operationDelete() {
+    private function operationDelete(): void
+    {
         $whereClause = $this->prepareWhereClause();
 
         $db = \DoKafkaMessage\DataAccess::getInstance();
