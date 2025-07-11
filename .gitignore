@@ -3,3 +3,4 @@ mariadb-binlog-capture-w-nodejs/node_modules/
 mariadb-binlog-capture-w-nodejs/.idea/
 
 kafka-to-postgresql-via-php/vendor/*
+kafka-to-mongo-via-python/__pycache__/
