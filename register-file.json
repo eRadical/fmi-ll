@@ -1,0 +1,16 @@
+{
+  "name": "save-2-file",
+  "config": {
+    "connector.class": "org.apache.kafka.connect.file.FileStreamSinkConnector",
+    "tasks.max": "1",
+    "name": "save-2-file",
+    "topics.regex": "^127_0_0_1.sakila..*",
+    "file": "/tmp/sakila-audit/sakila.audit.txt",
+    "value.converter": "org.apache.kafka.connect.storage.StringConverter",
+    "value.converter.schemas.enable": "true",
+    "key.converter": "org.apache.kafka.connect.storage.StringConverter",
+    "key.converter.schemas.enable": "false",
+    "header.converter": "org.apache.kafka.connect.storage.StringConverter",
+    "header.converter.schemas.enable": "false"
+  }
+}

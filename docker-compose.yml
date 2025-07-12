@@ -38,8 +38,10 @@ services:
       - KAFKA_CLUSTERS_0_NAME=licenta-gp
       - KAFKA_CLUSTERS_0_BOOTSTRAPSERVERS=127.0.0.1:9092
   debezium_connect:
-    image: "quay.io/debezium/connect"
-    container_name: debezium_connect
+#    image: "quay.io/debezium/connect"
+    build:
+      dockerfile: Dockerfile
+    container_name: my_debezium_connect
     depends_on:
       - broker
       - kafka-ui
@@ -57,6 +59,8 @@ services:
       LOG_LEVEL: ERROR
       CONNECT_VALUE_CONVERTER_SCHEMAS_ENABLE: false
       CONNECT_KEY_CONVERTER_SCHEMAS_ENABLE: false
+    volumes:
+      - /tmp/sakila-audit:/tmp/sakila-audit
 #
 #volumes:
 #  kafka_logs:
