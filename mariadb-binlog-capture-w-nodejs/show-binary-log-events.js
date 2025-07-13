@@ -1,8 +1,7 @@
 
 const ZongJi = require('zongji');
-
 const zongji = new ZongJi({
-    host     : 'localhost',
+    host     : '127.0.0.1',
     user     : 'sakila',
     password : 'sakila',
     // debug: true

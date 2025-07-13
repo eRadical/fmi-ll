@@ -22,8 +22,6 @@ services:
       KAFKA_CONTROLLER_LISTENER_NAMES: CONTROLLER
       KAFKA_LOG_DIRS: /tmp/kraft-combined-logs
       CLUSTER_ID: licenta-gp
-#    volumes:
-#      - kafka_logs:/tmp/kraft-combined-logs
   kafka-ui:
     image: provectuslabs/kafka-ui
     container_name: kafka-ui
@@ -38,7 +36,7 @@ services:
       - KAFKA_CLUSTERS_0_NAME=licenta-gp
       - KAFKA_CLUSTERS_0_BOOTSTRAPSERVERS=127.0.0.1:9092
   debezium_connect:
-#    image: "quay.io/debezium/connect"
+    # image: "quay.io/debezium/connect"
     build:
       dockerfile: Dockerfile
     container_name: my_debezium_connect
@@ -61,6 +59,3 @@ services:
       CONNECT_KEY_CONVERTER_SCHEMAS_ENABLE: false
     volumes:
       - /tmp/sakila-audit:/tmp/sakila-audit
-#
-#volumes:
-#  kafka_logs:
