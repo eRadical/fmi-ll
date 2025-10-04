@@ -1,6 +1,6 @@
 .idea/
-mariadb-binlog-capture-w-nodejs/node_modules/
-mariadb-binlog-capture-w-nodejs/.idea/
+**/node_modules/
+**/.idea/
 
-kafka-to-postgresql-via-php/vendor/*
-kafka-to-mongo-via-python/__pycache__/
+sink/kafka-to-postgresql-via-php/vendor/*
+**/__pycache__/

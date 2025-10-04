@@ -23,7 +23,7 @@ services:
       KAFKA_LOG_DIRS: /tmp/kraft-combined-logs
       CLUSTER_ID: licenta-gp
   kafka-ui:
-    image: provectuslabs/kafka-ui
+    image: ghcr.io/kafbat/kafka-ui
     container_name: kafka-ui
     depends_on:
       - broker
@@ -58,4 +58,4 @@ services:
       CONNECT_VALUE_CONVERTER_SCHEMAS_ENABLE: false
       CONNECT_KEY_CONVERTER_SCHEMAS_ENABLE: false
     volumes:
-      - /tmp/sakila-audit:/tmp/sakila-audit
+      - /tmp/sakila-audit:/tmp/sakila-audit:rw

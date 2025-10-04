@@ -1,4 +1,7 @@
 
+# Kafka UI
+http://localhost:8080/ui/
+
 # Start MariaDB connector
 curl -i -X POST \
     -H "Accept:application/json" \
